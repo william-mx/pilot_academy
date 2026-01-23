@@ -1,0 +1,26 @@
+name: all_towns_with_weather
+split: split_20260122_122820
+
+paths:
+  data_root: data
+  images_rel: raw/images
+  splits_rel: splits
+  label_to_id_rel: raw/label_to_id.json
+  action_to_id_rel: raw/action_to_id.json
+
+io:
+  image_shape: [220, 220, 3]
+  cache_non_straight: true
+
+train:
+  batch_size: 3
+  n_events: 17
+  n_straight: 100
+  shuffle_buffer: 600
+  base_seed: 0
+
+val:
+  batch_size: 3
+
+pilotnet:
+  drop_nav_cmd: true

@@ -1,0 +1,21 @@
+{
+    "name": "TensorFlow GPU Dev Environment",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-toolsai.jupyter",
+                "ms-python.vscode-pylint"
+            ]
+        }
+    },
+    // Crucial: This enables GPU support in the container
+    "runArgs": [
+        "--gpus", "all",
+        "--shm-size=1g" 
+    ],
+    "remoteUser": "root"
+}

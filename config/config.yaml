@@ -1,0 +1,25 @@
+defaults:
+  - dataset: all_towns_with_weather
+  - model: pilotnet-sf-bc-steer
+  - train: pilotnet_baseline
+  - optional experiment: lr_sweep_001
+  - _self_
+
+# project-wide shared values
+project_dir: /workspaces/pilot_academy
+
+# central “contract” fields that others reference
+image_shape: ${dataset.io.image_shape}
+batch_size_train: ${dataset.train.batch_size}
+batch_size_val: ${dataset.val.batch_size}
+
+run:
+  name: ${train.name}
+
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}_${run.name}
+  sweep:
+    dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}
+

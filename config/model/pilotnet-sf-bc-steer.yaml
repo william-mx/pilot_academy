@@ -1,0 +1,5 @@
+name: pilotnet-sf-bc-steer
+
+model:
+  input_shape: ${image_shape}
+

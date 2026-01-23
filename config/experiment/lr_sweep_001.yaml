@@ -1,0 +1,9 @@
+# config/experiment/lr_sweep_001.yaml
+# @package _global_
+
+# Override specific values
+optim:
+  lr: 0.0001
+
+run:
+  name: pilotnet_lr_sweep_001
