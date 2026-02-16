@@ -1,8 +1,8 @@
 defaults:
   - dataset: all_towns_with_weather
-  - model: pilotnet-sf-bc-steer
-  - train: pilotnet_baseline
-  - optional experiment: lr_sweep_001
+  - model: vit-sf-navbc-steer
+  - train: command_vit_baseline
+  - optional experiment: null # lr_sweep_001
   - _self_
 
 # project-wide shared values
@@ -16,10 +16,23 @@ batch_size_val: ${dataset.val.batch_size}
 run:
   name: ${train.name}
 
+# Resume training configuration
+resume:
+  enabled: true
+  checkpoint_path: '/workspaces/pilot_academy/outputs/2026-02-02/20-17-13_command_vit_baseline/checkpoints/model.keras'
+  restore:
+    model_weights: true
+    optimizer_state: true
+    epoch_counter: true
+  adjust:
+    reset_optimizer: false
+    reset_lr_schedule: false
+    additional_epochs: 100
+  strict: true
+
 hydra:
   run:
     dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}_${run.name}
   sweep:
     dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
     subdir: ${hydra.job.num}
-
