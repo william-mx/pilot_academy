@@ -55,6 +55,7 @@ class TrainingSpec:
         model: tf.keras.Model,
         train_ds,
         val_ds=None,
+        **fit_kwargs,
     ):
         return model.fit(
             train_ds,
@@ -64,4 +65,5 @@ class TrainingSpec:
             validation_steps=self.validation_steps,
             callbacks=self.callbacks,
             **self.fit_kwargs,
+            **fit_kwargs,
         )
