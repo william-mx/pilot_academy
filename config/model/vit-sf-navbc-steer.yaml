@@ -1,0 +1,11 @@
+# config/model/vit-sf-navbc-steer.yaml
+name: vit-sf-navbc-steer
+
+model:
+  input_shape: ${image_shape}
+  channels: [32,]
+  heads: 4
+  mlp_ratio: 2.0
+  dropout: 0.0
+  patch_size: 16
+  num_commands: 4
