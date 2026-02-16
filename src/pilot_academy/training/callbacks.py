@@ -30,6 +30,14 @@ def build_callbacks(
                 patience: 10
                 restore_best_weights: true
                 verbose: 1
+            reduce_lr:
+                enabled: false
+                monitor: val_loss
+                factor: 0.5
+                patience: 60
+                min_lr: 1e-7
+                verbose: 1
+                cooldown: 1
     
     Args:
         cfg: Callbacks configuration (DictConfig)
@@ -60,6 +68,20 @@ def build_callbacks(
                 monitor=ckpt_cfg.monitor,
                 save_best_only=ckpt_cfg.save_best_only,
                 verbose=int(ckpt_cfg.verbose),
+            )
+        )
+
+    # ReduceLROnPlateau callback
+    if hasattr(cfg, "reduce_lr") and cfg.reduce_lr.enabled:
+        lr_cfg = cfg.reduce_lr
+        callbacks.append(
+            tf.keras.callbacks.ReduceLROnPlateau(
+                monitor=lr_cfg.monitor,
+                factor=float(lr_cfg.factor),
+                patience=int(lr_cfg.patience),
+                min_lr=float(lr_cfg.min_lr),
+                verbose=int(lr_cfg.verbose),
+                cooldown=int(lr_cfg.get("cooldown", 0)),
             )
         )
 
