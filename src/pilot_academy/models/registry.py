@@ -8,6 +8,7 @@ import tensorflow as tf
 from omegaconf import DictConfig
 
 from .pilotnet import build_pilotnet
+from .vit_sf_navbc_steer import build_vit_nav
 
 
 # Type alias for model builder functions
@@ -16,7 +17,16 @@ ModelBuilder = Callable[[DictConfig], tf.keras.Model]
 
 _MODEL_BUILDERS: Dict[str, ModelBuilder] = {
     "pilotnet-sf-bc-steer": lambda cfg: build_pilotnet(
-        input_shape=tuple(cfg.model.model.input_shape)
+        input_shape=tuple(cfg.model.input_shape)
+    ),
+    "vit-sf-navbc-steer": lambda cfg: build_vit_nav(
+        input_shape=tuple(cfg.model.input_shape),
+        channels=tuple(cfg.model.get("channels", (64, 128))),
+        heads=cfg.model.get("heads", 4),
+        mlp_ratio=cfg.model.get("mlp_ratio", 2.0),
+        dropout=cfg.model.get("dropout", 0.0),
+        patch_size=cfg.model.get("patch_size", 16),
+        num_commands=cfg.model.get("num_commands", 6),
     ),
 }
 
@@ -31,7 +41,7 @@ def register_model(name: str, builder: ModelBuilder) -> None:
     
     Example:
         >>> def my_model_builder(cfg: DictConfig) -> tf.keras.Model:
-        ...     return build_my_model(cfg.models.hidden_dims)
+        ...     return build_my_model(cfg.model.hidden_dims)
         >>> register_model("my-model", my_model_builder)
     """
     if name in _MODEL_BUILDERS:
@@ -68,9 +78,7 @@ def build_model(cfg: DictConfig) -> tf.keras.Model:
         ... })
         >>> model = build_model("pilotnet-sf-bc-steer", cfg)
     """
-
-    name = cfg.model.name
-
+    name = cfg.name
     if name not in _MODEL_BUILDERS:
         available = ", ".join(_MODEL_BUILDERS.keys())
         raise ValueError(
